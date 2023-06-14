@@ -2,12 +2,6 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import throttle from 'lodash.throttle';
-// // // гудд
-// Notify.success('Sol lucet omnibus');
-// // // ошика
-// // Notify.failure('Qui timide rogat docet negare');
-
-// import { fetchSearch } from './api-key';
 import NewServer from './api-key';
 const newServer = new NewServer();
 
@@ -22,9 +16,18 @@ function onFormSubmit(e) {
   newServer.resetPage();
   newServer
     .fetchSearch()
-    .then(hits => {
-        clearContainer(),
-        renderResult(hits),
+    .then(request => {
+      if (newServer.query === '') {
+        return
+      } else if (request.hits.length === 0) {
+        return Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      }
+      Notify.success(`Hooray! We found ${request.totalHits} images.`);
+      console.log(request);
+      clearContainer(),
+        renderResult(request.hits),
         lightbox.refresh();
     })
     .catch(err => {
@@ -35,29 +38,7 @@ function onFormSubmit(e) {
     });
 }
 
-// loadMore.addEventListener('click', () =>
-//   newServer
-//     .fetchSearch()
-//     .then(data => {
-//       renderResult(data),
-//       { height: cardHeight } = document
-//   .querySelector(".gallery")
-//   .firstElementChild.getBoundingClientRect();
 
-// window.scrollBy({
-//   top: cardHeight * 2,
-//   behavior: "smooth",
-// });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       Notify.failure(
-//         'Sorry, there are no images matching your search query. Please try again.'
-//       );
-//     })
-// );
-
-// рендер изображений
 function renderResult(arry) {
   const markup = arry
     .map(
@@ -96,6 +77,7 @@ function renderResult(arry) {
 }
 
 function clearContainer() {
+  console.log('я очитстил страницу')
   galleryWrap.innerHTML = '';
 }
 
@@ -104,29 +86,27 @@ var lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
-
-
-import throttle from 'lodash.throttle';
-
-// ...
-
-// Добавляем обработчик события scroll с использованием throttle для оптимизации
 window.addEventListener('scroll', throttle(handleScroll, 500));
 
 function handleScroll() {
-  // Проверяем, достиг ли пользователь конца страницы
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-    // Выполняем запрос к API для загрузки следующей порции изображений
     newServer
       .fetchSearch()
-      .then(data => {
-        // Отображаем новые изображения в галерее
-        renderResult(data);
+      .then(request => {
+        renderResult(request.hits);
+        const { height: cardHeight } = document
+          .querySelector('.gallery')
+          .firstElementChild.getBoundingClientRect();
+        
+        window.scrollBy({
+          top: cardHeight * 2,
+          behavior: 'smooth',
+        });
       })
       .catch(err => {
         console.log(err);
         Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
+          `We're sorry, but you've reached the end of search results.`
         );
       });
   }
