@@ -88,7 +88,7 @@ function handleScroll() {
     newServer
       .fetchSearch()
       .then(request => {
-        renderResult(request.hits);
+        renderResult(request.hits), lightbox.refresh();
         const { height: cardHeight } = document
           .querySelector('.gallery')
           .firstElementChild.getBoundingClientRect();

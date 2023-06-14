@@ -108,3 +108,8 @@ img {
     display: block;
     
 }
+
+
+.text{
+    display: none;
+}
