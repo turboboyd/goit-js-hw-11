@@ -18,17 +18,14 @@ function onFormSubmit(e) {
     .fetchSearch()
     .then(request => {
       if (newServer.query === '') {
-        return
+        return;
       } else if (request.hits.length === 0) {
         return Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
       }
       Notify.success(`Hooray! We found ${request.totalHits} images.`);
-      console.log(request);
-      clearContainer(),
-        renderResult(request.hits),
-        lightbox.refresh();
+      clearContainer(), renderResult(request.hits), lightbox.refresh();
     })
     .catch(err => {
       console.log(err);
@@ -37,7 +34,6 @@ function onFormSubmit(e) {
       );
     });
 }
-
 
 function renderResult(arry) {
   const markup = arry
@@ -77,7 +73,6 @@ function renderResult(arry) {
 }
 
 function clearContainer() {
-  console.log('я очитстил страницу')
   galleryWrap.innerHTML = '';
 }
 
@@ -97,7 +92,7 @@ function handleScroll() {
         const { height: cardHeight } = document
           .querySelector('.gallery')
           .firstElementChild.getBoundingClientRect();
-        
+
         window.scrollBy({
           top: cardHeight * 2,
           behavior: 'smooth',

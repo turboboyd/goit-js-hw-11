@@ -1,9 +1,11 @@
+const axios = require('axios/dist/browser/axios.cjs');
+
 export default class NewServer {
   constructor() {
     this.searchName = '';
     this.numberPage = 1;
   }
-  fetchSearch() {
+  async fetchSearch() {
     const BASE_URL = 'https://pixabay.com/api/';
     const API_KEY = '37071230-d6b04d3068f1a0950a5b376a5';
 
@@ -13,17 +15,19 @@ export default class NewServer {
       orientation: 'horizontal',
       safesearch: true,
       per_page: 40,
+      q: this.searchName,
+      page: this.numberPage,
     });
-    return fetch(
-      `${BASE_URL}?${searchParams}&q=${this.searchName}&page=${this.numberPage}`
-    )
-      .then(r => r.json())
-      .then(data => {
-        this.inctementPage()
-        return data;
-      });
-  }
 
+    try {
+      const response = await axios.get(`${BASE_URL}?${searchParams}`);
+      this.inctementPage();
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw new Error('An error occurred during the search.');
+    }
+  }
   inctementPage() {
     this.numberPage += 1;
   }
@@ -40,4 +44,3 @@ export default class NewServer {
     return (this.searchName = newQuery);
   }
 }
-
