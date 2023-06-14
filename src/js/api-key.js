@@ -41,6 +41,6 @@ export default class NewServer {
   }
 
   set query(newQuery) {
-    return this.searchName = newQuery;
+    return (this.searchName = newQuery);
   }
 }
