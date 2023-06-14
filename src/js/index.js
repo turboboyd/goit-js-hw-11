@@ -17,6 +17,7 @@ function onFormSubmit(e) {
   newServer
     .fetchSearch()
     .then(request => {
+      clearContainer();
       if (newServer.query === '') {
         return;
       } else if (request.hits.length === 0) {
@@ -25,7 +26,7 @@ function onFormSubmit(e) {
         );
       }
       Notify.success(`Hooray! We found ${request.totalHits} images.`);
-      clearContainer(), renderResult(request.hits), lightbox.refresh();
+      renderResult(request.hits), lightbox.refresh();
     })
     .catch(err => {
       console.log(err);
