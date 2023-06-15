@@ -7,7 +7,7 @@ const newServer = new NewServer();
 
 const galleryWrap = document.querySelector('.gallery');
 const searchForm = document.querySelector('.search-form');
-const textFinish = document.querySelector('.text')
+const textFinish = document.querySelector('.text');
 searchForm.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(e) {
@@ -91,8 +91,8 @@ function handleScroll() {
       return;
     }
     if (newServer.numberPage >= 12) {
-      textFinish.style.display = "block";
-      return; 
+      textFinish.style.display = 'block';
+      return;
     }
     newServer
       .fetchSearch()
@@ -107,9 +107,8 @@ function handleScroll() {
           behavior: 'smooth',
         });
         const totalPages = Math.ceil(request.totalHits / 40);
-        console.log('totalPages: ', totalPages);
-        if (newServer.numberPage === totalPages){
-          textFinish.style.display = "block";
+        if (newServer.numberPage === totalPages) {
+          textFinish.style.display = 'block';
         }
       })
       .catch(err => {
