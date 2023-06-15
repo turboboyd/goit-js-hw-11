@@ -21,11 +21,14 @@ export default class NewServer {
 
     try {
       const response = await axios.get(`${BASE_URL}?${searchParams}`);
+
+
       this.inctementPage();
       return response.data;
     } catch (error) {
       console.log(error);
-      throw new Error('An error occurred during the search.');
+      new Error('An error occurred during the search.');
+      return;
     }
   }
   inctementPage() {
@@ -44,3 +47,11 @@ export default class NewServer {
     return (this.searchName = newQuery);
   }
 }
+
+// const totalPages = Math.floor(request.totalHits / 40);
+// console.log('Количество страниц:', totalPages);
+// if (this.numberPage > totalPages) {
+//   console.log(this.numberPage);
+//   console.log('Достигнут предел страниц');
+//   return;
+// }

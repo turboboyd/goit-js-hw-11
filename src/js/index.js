@@ -7,17 +7,18 @@ const newServer = new NewServer();
 
 const galleryWrap = document.querySelector('.gallery');
 const searchForm = document.querySelector('.search-form');
-
+const textFinish = document.querySelector('.text')
 searchForm.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(e) {
   e.preventDefault();
+  clearContainer();
+  textFinish.style.display = 'none';
   newServer.query = e.currentTarget.elements.searchQuery.value;
   newServer.resetPage();
   newServer
     .fetchSearch()
     .then(request => {
-      clearContainer();
       if (newServer.query === '') {
         return;
       } else if (request.hits.length === 0) {
@@ -86,6 +87,13 @@ window.addEventListener('scroll', throttle(handleScroll, 500));
 
 function handleScroll() {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+    if (newServer.query === '') {
+      return;
+    }
+    if (newServer.numberPage >= 12) {
+      textFinish.style.display = "block";
+      return; 
+    }
     newServer
       .fetchSearch()
       .then(request => {
@@ -98,12 +106,15 @@ function handleScroll() {
           top: cardHeight * 2,
           behavior: 'smooth',
         });
+        const totalPages = Math.ceil(request.totalHits / 40);
+        console.log('totalPages: ', totalPages);
+        if (newServer.numberPage === totalPages){
+          textFinish.style.display = "block";
+        }
       })
       .catch(err => {
         console.log(err);
-        Notify.failure(
-          `We're sorry, but you've reached the end of search results.`
-        );
+        Notify.failure(`An error occurred during the search.`);
       });
   }
 }

@@ -111,5 +111,7 @@ img {
 
 
 .text{
+    margin-top: 10px;
     display: none;
+    text-align: center;
 }
