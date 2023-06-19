@@ -21,8 +21,7 @@ export default class NewServer {
 
     try {
       const response = await axios.get(`${BASE_URL}?${searchParams}`);
-
-
+      this.data = response.data;
       this.inctementPage();
       return response.data;
     } catch (error) {
@@ -46,12 +45,8 @@ export default class NewServer {
   set query(newQuery) {
     return (this.searchName = newQuery);
   }
-}
 
-// const totalPages = Math.floor(request.totalHits / 40);
-// console.log('Количество страниц:', totalPages);
-// if (this.numberPage > totalPages) {
-//   console.log(this.numberPage);
-//   console.log('Достигнут предел страниц');
-//   return;
-// }
+  totalPages() {
+    return Math.ceil(this.data.totalHits / 40);
+  }
+}
